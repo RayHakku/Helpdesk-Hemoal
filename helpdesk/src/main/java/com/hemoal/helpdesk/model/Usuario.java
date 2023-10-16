@@ -1,5 +1,7 @@
 package com.hemoal.helpdesk.model;
 
+import jakarta.persistence.Column;
+import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,12 +11,22 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "usuario")
 public class Usuario {
+    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private UUID id;
+    @Column(
+        unique = true,
+        nullable = false
+    )
     private String email;
+    @Column(
+        nullable = false
+    )
     private String password;
-    private Integer role;
+    
+    private Integer role = 0;
 
     public Long getId() {
         return id;
