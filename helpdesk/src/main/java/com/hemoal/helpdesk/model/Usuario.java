@@ -1,37 +1,50 @@
 package com.hemoal.helpdesk.model;
 
-import jakarta.persistence.Column;
+//Java Imports
 import java.util.UUID;
+import java.util.List;
+//Jakarta Persistence Imports
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+
 
 @Entity
 @Table(name = "usuario")
 public class Usuario {
     
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     @Column(
         unique = true,
-        nullable = false
+        nullable = false,
+        length = 50
     )
     private String email;
     @Column(
-        nullable = false
+        nullable = false,
+        length = 30
     )
     private String password;
-    
-    private Integer role = 0;
 
-    public Long getId() {
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinTable( name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
+    private List<Role> roles;
+    
+
+    public UUID getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
     public String getEmail() {
@@ -46,11 +59,11 @@ public class Usuario {
     public void setPassword(String password) {
         this.password = password;
     }
-    public Integer getRole() {
-        return role;
+    public List<Role> getRoles() {
+        return roles;
     }
-    public void setRole(Integer role) {
-        this.role = role;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
-
+    
 }

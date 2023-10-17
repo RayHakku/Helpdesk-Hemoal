@@ -33,6 +33,9 @@ public class UsuarioController {
 
     @PostMapping("/usuarios")
     public Usuario createUsuario(@RequestBody Usuario usuario) {
+        if (ur.findByEmail(usuario.getEmail()) != null) {
+            return null;
+        }
         return ur.save(usuario);
     }
 
@@ -41,13 +44,5 @@ public class UsuarioController {
         ur.deleteById(id);
     }
 
-    @PutMapping("/usuarios/{id}")
-    public Usuario updateUsuario(@PathVariable(value = "id") Long id, @RequestBody Usuario usuario) {
-        Optional<Usuario> u = ur.findById(id);
-        Usuario _u = u.get();
-        _u.setEmail(usuario.getEmail());
-        _u.setPassword(usuario.getPassword());
-        _u.setRole(usuario.getRole());
-        return ur.save(_u);
-    }
+    
 }
