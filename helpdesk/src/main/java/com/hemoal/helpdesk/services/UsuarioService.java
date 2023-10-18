@@ -1,6 +1,9 @@
 package com.hemoal.helpdesk.services;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,10 @@ import com.hemoal.helpdesk.model.Usuario;
 import com.hemoal.helpdesk.repository.RoleRepository;
 import com.hemoal.helpdesk.repository.UsuarioRepo;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+
 /**
  * This class represents the service layer for the Usuario entity.
  */
@@ -32,6 +39,9 @@ public class UsuarioService {
     RoleRepository roleRepository;
     @Autowired
     AuthenticationManager authenticationManager;
+
+    @Autowired
+    EntityManager EntityManager;
 
     /**
      * This method registers a new user in the system.
@@ -73,5 +83,38 @@ public class UsuarioService {
         } catch (AuthenticationException e) {
             return ResponseEntity.badRequest().body("Email ou Senha Invalidos");
         }
+    }
+
+    /**
+     * Returns a list of all usuarios.
+     *
+     * @return a list of Usuario objects
+     */
+    public List<Usuario> getAllUsuarios() {
+        return usuarioRepo.findAll();
+    }
+
+    /**
+     * Retrieves a user by their unique identifier.
+     *
+     * @param id The unique identifier of the user to retrieve.
+     * @return An Optional containing the user if found, otherwise an empty Optional.
+     */
+    public Optional<Usuario> getUsuarioById(UUID id){
+        if (!usuarioRepo.existsById(id)) {
+            return Optional.empty();
+        }
+        return usuarioRepo.findById(id);
+    }
+
+    /**
+     * Deletes a user with the given ID.
+     * @param id The ID of the user to be deleted.
+     * @return A ResponseEntity with a success message if the user was deleted, or a bad request message if the user was not found.
+     */
+    @Transactional
+    public void deleteUsuario(UUID id) {
+        Usuario user = usuarioRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        usuarioRepo.delete(user);
     }
 }
