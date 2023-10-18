@@ -33,6 +33,7 @@ public class SecurityConfiguration {
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(requests -> requests
             .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/usuario/**").permitAll()
             .anyRequest().authenticated())
             .httpBasic(withDefaults());
         return http.build();
