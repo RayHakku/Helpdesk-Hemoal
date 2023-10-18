@@ -16,7 +16,7 @@ public class Role {
     @Column(
         unique = true,
         nullable = false,
-        length = 20
+        length = 15
     )
     private String role;
     
