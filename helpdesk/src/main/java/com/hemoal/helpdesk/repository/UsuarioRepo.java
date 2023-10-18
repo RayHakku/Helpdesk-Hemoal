@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 import com.hemoal.helpdesk.model.Usuario;
+import java.util.List;
+import java.util.UUID;
+
 
 /**
  * This interface represents the repository for the Usuario entity.
@@ -27,4 +30,10 @@ public interface UsuarioRepo extends JpaRepository<Usuario, Long> {
      * @return true if a Usuario entity exists with the given email, otherwise false
      */
     Boolean existsByEmail(String email);
+
+    Optional<Usuario> findById(UUID id);
+
+    void deleteById(UUID id);
+
+    boolean existsById(UUID id);
 }
