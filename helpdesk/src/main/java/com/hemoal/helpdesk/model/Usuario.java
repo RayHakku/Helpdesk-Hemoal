@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Column;
@@ -39,6 +40,24 @@ public class Usuario {
     @JoinTable( name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id"),
      inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "solicitante")
+    private List<Chamados> chamadosSolicitante;
+
+    public List<Chamados> getChamadosSolicitante() {
+        return chamadosSolicitante;
+    }
+    public void setChamadosSolicitante(List<Chamados> chamadosSolicitante) {
+        this.chamadosSolicitante = chamadosSolicitante;
+    }
+    public List<Chamados> getChamadosTecnico() {
+        return chamadosTecnico;
+    }
+    public void setChamadosTecnico(List<Chamados> chamadosTecnico) {
+        this.chamadosTecnico = chamadosTecnico;
+    }
+    @OneToMany(mappedBy = "tecnico")
+    private List<Chamados> chamadosTecnico;
     
 
     public UUID getId() {
