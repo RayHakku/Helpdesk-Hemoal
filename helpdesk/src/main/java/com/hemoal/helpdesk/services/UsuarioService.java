@@ -16,10 +16,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.hemoal.helpdesk.DTO.AuthResponseDTO;
 import com.hemoal.helpdesk.model.Role;
 import com.hemoal.helpdesk.model.Usuario;
 import com.hemoal.helpdesk.repository.RoleRepository;
 import com.hemoal.helpdesk.repository.UsuarioRepo;
+import com.hemoal.helpdesk.security.JWTGenerator;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,9 +41,10 @@ public class UsuarioService {
     RoleRepository roleRepository;
     @Autowired
     AuthenticationManager authenticationManager;
-
     @Autowired
     EntityManager EntityManager;
+    @Autowired
+    JWTGenerator jwtGenerator;
 
     /**
      * This method registers a new user in the system.
@@ -70,7 +73,7 @@ public class UsuarioService {
      * @param usuario The user object containing email and password.
      * @return A ResponseEntity with a success message if authentication is successful, or a bad request message if authentication fails.
      */
-    public ResponseEntity<String> loginUsuario(Usuario usuario) {
+    public ResponseEntity<AuthResponseDTO> loginUsuario(Usuario usuario) {
         try{
             // 1. Authentication
             Authentication authentication = authenticationManager.authenticate(
@@ -79,9 +82,9 @@ public class UsuarioService {
             // 2. Set the Authentication in the SecurityContext
             SecurityContextHolder.getContext().setAuthentication(authentication);
             // 3. Create token
-            return ResponseEntity.ok().body("Usuario Logado");
+            return ResponseEntity.ok(new AuthResponseDTO(jwtGenerator.generateToken(authentication)));
         } catch (AuthenticationException e) {
-            return ResponseEntity.badRequest().body("Email ou Senha Invalidos");
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -117,4 +120,23 @@ public class UsuarioService {
         Usuario user = usuarioRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
         usuarioRepo.delete(user);
     }
+
+    public void updateUsuario(UUID id, Usuario usuario) {
+        Usuario user = usuarioRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user.setEmail(usuario.getEmail());
+        user.setPassword(usuario.getPassword());
+        usuarioRepo.save(user);
+    }
+
+    public Optional<Usuario> getUsuarioByEmail(String email) {
+        return usuarioRepo.findByEmail(email);
+    }
+
+    public Optional<Usuario> getUsuarioByEmailWithToken(String token) {
+        String[] subject = jwtGenerator.getUsernameFromJWT(token).split(", ");
+        System.out.println("Emial:" + subject[0]);
+        String email = subject[0];
+        return usuarioRepo.findByEmail(email);
+    }
+
 }

@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 import com.hemoal.helpdesk.model.Usuario;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -31,9 +30,26 @@ public interface UsuarioRepo extends JpaRepository<Usuario, Long> {
      */
     Boolean existsByEmail(String email);
 
+    /**
+     * Finds a Usuario entity by its id.
+     *
+     * @param id the id of the Usuario to find
+     * @return an Optional containing the Usuario entity if found, otherwise empty
+     */
     Optional<Usuario> findById(UUID id);
 
+    /**
+     * Deletes a Usuario entity by its id.
+     *
+     * @param id the id of the Usuario to delete
+     */
     void deleteById(UUID id);
 
+    /**
+     * Checks if a Usuario entity exists with the given id.
+     *
+     * @param id the id to check
+     * @return true if a Usuario entity exists with the given id, otherwise false
+     */
     boolean existsById(UUID id);
 }

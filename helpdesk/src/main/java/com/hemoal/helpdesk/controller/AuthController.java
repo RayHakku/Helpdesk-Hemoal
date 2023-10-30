@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hemoal.helpdesk.DTO.AuthResponseDTO;
 import com.hemoal.helpdesk.model.Usuario;
 import com.hemoal.helpdesk.services.UsuarioService;
 
@@ -23,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUsuario(@RequestBody Usuario usuario){
+    public ResponseEntity<AuthResponseDTO> loginUsuario(@RequestBody Usuario usuario){
         return usuarioService.loginUsuario(usuario);
     }
 }

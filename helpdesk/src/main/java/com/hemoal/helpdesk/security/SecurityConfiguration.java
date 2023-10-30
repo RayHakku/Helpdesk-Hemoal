@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.hemoal.helpdesk.services.UserDetailsServicesImplement;
 
@@ -22,23 +23,26 @@ public class SecurityConfiguration {
 
     @Autowired
     private UserDetailsServicesImplement userDetailsService;
+    @Autowired
+    private JwtEntryPoint authEntryPoint;
 
-    public SecurityConfiguration(UserDetailsServicesImplement userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+
 
     @Bean
      public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
     http
         .csrf(csrf -> csrf.disable())
+        .exceptionHandling(exceptionHandling -> exceptionHandling
+            .authenticationEntryPoint(authEntryPoint))
         .sessionManagement(sessionManagement -> sessionManagement
             .sessionFixation().migrateSession()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(requests -> requests
             .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/usuario/**").permitAll()
+            // .requestMatchers("/api/usuario/**").permitAll()
             .anyRequest().authenticated())
             .httpBasic(withDefaults());
+        http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
         }
 
@@ -52,6 +56,11 @@ public class SecurityConfiguration {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JWTAuthFilter jwtAuthFilter() {
+        return new JWTAuthFilter();
     }
 
 }

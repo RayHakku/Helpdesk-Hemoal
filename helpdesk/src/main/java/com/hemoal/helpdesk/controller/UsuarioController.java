@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,6 +40,21 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public void deleteUsuarioById(@PathVariable("id")UUID id){
         usuarioService.deleteUsuario(id);
+    }
+
+    @PutMapping("/{id}")
+    public void updateUsuarioById(@PathVariable("id")UUID id, Usuario usuario){
+        usuarioService.updateUsuario(id, usuario);
+    }
+
+    @GetMapping("/email/{email}")
+    public Optional<Usuario> getUsuarioByEmail(@PathVariable("email")String email){
+        return usuarioService.getUsuarioByEmail(email);
+    }
+
+    @GetMapping("/token/{token}")
+    public Optional<Usuario> getUsuarioByToken(@PathVariable("token")String token){
+        return usuarioService.getUsuarioByEmailWithToken(token);
     }
     
 }
