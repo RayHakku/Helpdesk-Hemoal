@@ -1,5 +1,6 @@
 package com.hemoal.helpdesk.services;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.hemoal.helpdesk.DTO.AuthResponseDTO;
 import com.hemoal.helpdesk.model.Role;
@@ -93,8 +95,13 @@ public class UsuarioService {
      *
      * @return a list of Usuario objects
      */
-    public List<Usuario> getAllUsuarios() {
-        return usuarioRepo.findAll();
+    public ResponseEntity<List<Usuario>> getAllUsuarios() {
+        try {
+             List<Usuario> usuarios = usuarioRepo.findAll();
+                return ResponseEntity.ok(usuarios);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     /**
@@ -133,6 +140,11 @@ public class UsuarioService {
     }
 
     public Optional<Usuario> getUsuarioByEmailWithToken(String token) {
+        // System.out.println("first line getUsuarioByEmailWithToken Token:" + token);
+        // if(StringUtils.hasText(token)&& token.startsWith("Bearer ")){
+        //     token = token.substring(7, token.length());
+        // }
+        // System.out.println("after if getUsuarioByEmailWithToken Token:" + token);
         String[] subject = jwtGenerator.getUsernameFromJWT(token).split(", ");
         System.out.println("Emial:" + subject[0]);
         String email = subject[0];
