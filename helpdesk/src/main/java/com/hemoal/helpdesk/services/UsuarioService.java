@@ -110,6 +110,7 @@ public class UsuarioService {
      * @param id The unique identifier of the user to retrieve.
      * @return An Optional containing the user if found, otherwise an empty Optional.
      */
+    @Transactional
     public Optional<Usuario> getUsuarioById(UUID id){
         if (!usuarioRepo.existsById(id)) {
             return Optional.empty();

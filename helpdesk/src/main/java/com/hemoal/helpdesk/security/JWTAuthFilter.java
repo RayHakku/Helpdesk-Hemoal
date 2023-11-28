@@ -28,7 +28,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String token = getJWTFromRequest(request);
+                try {
+                   String token = getJWTFromRequest(request);
         if(StringUtils.hasText(token) && jwtGenerator.validateToken(token)){
             String[] subject = jwtGenerator.getUsernameFromJWT(token).split(", ");
             String username = subject[0];
@@ -39,7 +40,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response); 
+                } catch (Exception e) {
+                    throw new RuntimeException(e.getMessage());
+                }
     }
 
     private String getJWTFromRequest(HttpServletRequest request) {

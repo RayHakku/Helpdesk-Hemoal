@@ -2,6 +2,10 @@ package com.hemoal.helpdesk.model;
 
 //Java Imports
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.util.List;
 //Jakarta Persistence Imports
 import jakarta.persistence.Entity;
@@ -19,6 +23,9 @@ import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "usuario")
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class, 
+  property = "id")
 public class Usuario {
     
     @Id
@@ -41,7 +48,8 @@ public class Usuario {
      inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "solicitante")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "solicitante")
+    
     private List<Chamados> chamadosSolicitante;
 
     public List<Chamados> getChamadosSolicitante() {
@@ -56,7 +64,8 @@ public class Usuario {
     public void setChamadosTecnico(List<Chamados> chamadosTecnico) {
         this.chamadosTecnico = chamadosTecnico;
     }
-    @OneToMany(mappedBy = "tecnico")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "tecnico")
+    
     private List<Chamados> chamadosTecnico;
     
 

@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * This interface represents the repository for the Usuario entity.
  */
-public interface UsuarioRepo extends JpaRepository<Usuario, Long> {
+public interface UsuarioRepo extends JpaRepository<Usuario, UUID> {
 
     /**
      * Finds a Usuario entity by its email.

@@ -16,6 +16,8 @@ import com.hemoal.helpdesk.repository.ChamadosRepository;
 import com.hemoal.helpdesk.repository.StatusRepository;
 import com.hemoal.helpdesk.security.JWTAuthFilter;
 
+import jakarta.transaction.Transactional;
+
 
 
 @Service
@@ -57,6 +59,7 @@ public class ChamadosServices {
         return ResponseEntity.ok().body("Chamado Deletado");
     }
 
+    @Transactional
     public List<Chamados> listarChamados(){
         return chamadosRepository.findAll();
     }

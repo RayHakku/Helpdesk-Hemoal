@@ -1,6 +1,8 @@
 package com.hemoal.helpdesk.model;
 
 
+import org.hibernate.mapping.OneToMany;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +22,11 @@ public class Status {
         length = 20
     )
     private String nome;
+
+    @jakarta.persistence.OneToMany(
+        mappedBy = "status"
+    )
+
     public int getId() {
         return id;
     }
