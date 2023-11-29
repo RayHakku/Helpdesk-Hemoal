@@ -19,6 +19,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Column;
+import static jakarta.persistence.CascadeType.ALL;
 
 
 @Entity
@@ -48,7 +49,9 @@ public class Usuario {
      inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
     private List<Role> roles;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "solicitante")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "solicitante",
+    cascade=ALL
+    )
     
     private List<Chamados> chamadosSolicitante;
 

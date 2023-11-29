@@ -2,10 +2,10 @@ package com.hemoal.helpdesk.model;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,10 +52,14 @@ public class Chamados {
 
     @ManyToOne
     @JoinColumn(name = "solicitante_id")
+    @JsonSerialize(using = UsuarioSerializer.class)
+    @JsonDeserialize(using = UsuarioDeserializer.class)
     private Usuario solicitante;
 
     @ManyToOne
     @JoinColumn(name = "tecnico_id")
+    @JsonSerialize(using = UsuarioSerializer.class)
+    @JsonDeserialize(using = UsuarioDeserializer.class)
     private Usuario tecnico;
     
     @PrePersist
